@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<style>
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    #goal {
+        width: 850px;
+        margin-top: 20px;
+        padding: 14px 18px;
+
+        color: white;
+        background: rgba(15, 15, 20, 0.82);
+
+        border: 2px solid white;
+        border-radius: 14px;
+    }
+
+    #header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    #title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    #numbers {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    #bar {
+        position: relative;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    #fill {
+        height: 100%;
+        width: 0%;
+
+        background: linear-gradient(
+            90deg,
+            #ff4fa3,
+            #b45cff,
+            #5ca8ff
+        );
+
+        transition: width 0.5s ease;
+    }
+
+    #percent {
+        position: absolute;
+        inset: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 16px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="goal">
+
+    <div id="header">
+        <div id="title">Loading...</div>
+        <div id="numbers">0 / 0</div>
+    </div>
+
+    <div id="bar">
+        <div id="fill"></div>
+        <div id="percent">0%</div>
+    </div>
+
+</div>
+
+<script>
+async function updateGoal() {
+    try {
+        const response = await fetch(
+            "/api/state?t=" + Date.now()
+        );
+
+        const state = await response.json();
+
+        const current = Number(state.current) || 0;
+        const target = Number(state.target) || 1;
+
+        const percentage =
+            Math.min(100, (current / target) * 100);
+
+        document.getElementById("title").textContent =
+            state.title;
+
+        document.getElementById("numbers").textContent =
+            current.toLocaleString()
+            + " / "
+            + target.toLocaleString();
+
+        document.getElementById("fill").style.width =
+            percentage + "%";
+
+        document.getElementById("percent").textContent =
+            Math.floor(percentage) + "%";
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+updateGoal();
+setInterval(updateGoal, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+<!doctype html>
+<label>Current total <input id="current" type="number" step="1" inputmode="numeric"></label>
+<button id="resetButton">Set goal</button><span id="status"></span>
+<script>document.querySelector("#resetButton").onclick=async()=>{const current=Number(document.querySelector("#current").value);const status=document.querySelector("#status");if(!Number.isInteger(current)){status.textContent=" Enter a whole number.";return}const response=await fetch("/api/reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({current})});status.textContent=response.ok?" Reset.":" Reset failed."}</script>

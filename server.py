@@ -28,6 +28,8 @@ goal_current = load_goal()
 
 async def index(request):
     return web.FileResponse("overlay.html")
+async def reset_page(request):
+    return web.FileResponse("reset.html")
 
 
 async def state(request):
@@ -41,6 +43,7 @@ async def reset(request):
     global goal_current
     data = await request.json()
     goal_current = int(data.get("current"))
+    save_goal()
 
     return web.json_response({
         "ok":True,
@@ -108,6 +111,7 @@ async def stop_listener(app):
 
 app = web.Application()
 
+app.router.add_get("/reset", reset_page)
 app.router.add_get("/", index)
 app.router.add_get("/api/state", state)
 app.router.add_post("/api/reset", reset)

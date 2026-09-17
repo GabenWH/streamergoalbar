@@ -5,7 +5,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 config_file="$script_dir/userdata.json"
 
 if [[ ! -f "$config_file" ]]; then
-  printf 'Missing configuration file: %s\n' "$config_file" >&2
+  printf 'Please read the ReadMe on github %s\n' "$config_file" >&2
   exit 1
 fi
 
